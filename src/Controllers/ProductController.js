@@ -3,8 +3,15 @@ const Product = moongose.model('Product');
 
 module.exports = {
     async index(req, res){
-        const products = await Product.find();
+        
+        // trecho de busca de produtos
+        //const products = await Product.find();
 
+        const { page = 1 } = req.query;
+        // trecho de busca de produtos com paginação
+        const products = await Product.paginate({}, { page, limit: 10 });
+
+        //trecho que retorna os produtos da busca, no formato json
         return res.json(products);
     },
 
@@ -28,6 +35,7 @@ module.exports = {
 
     // DELETE
     async destroy (req, res){
-        const product = await Product.findByIdAndDelete(req.params.id);
+        await Product.findByIdAndDelete(req.params.id);
+        return res.send();
     }
 };
